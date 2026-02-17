@@ -1,0 +1,172 @@
+/*
+ * ============================================================
+ * RAZAdminContent.css - Styles untuk Manajemen Konten
+ * ============================================================
+ */
+
+/* Content Header */
+.raz-content-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.raz-filters {
+    display: flex;
+    gap: 1rem;
+    background: var(--raz-bg-card);
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--raz-border);
+}
+
+.raz-input,
+.raz-select {
+    background: transparent;
+    border: 1px solid var(--raz-border);
+    color: var(--raz-text-main);
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-family: inherit;
+}
+
+.raz-input:focus,
+.raz-select:focus {
+    outline: none;
+    border-color: var(--raz-primary);
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+}
+
+/* Data Table */
+.raz-table-container {
+    background: var(--raz-bg-card);
+    border-radius: 1rem;
+    border: 1px solid var(--raz-border);
+    overflow: hidden;
+}
+
+.raz-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.raz-table th {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+    color: var(--raz-text-muted);
+    border-bottom: 1px solid var(--raz-border);
+}
+
+.raz-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    vertical-align: middle;
+}
+
+.raz-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.raz-table-img {
+    width: 40px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.raz-status-badge {
+    padding: 0.25rem 0.5rem;
+    border-radius: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.status-ongoing {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+}
+
+.status-completed {
+    background: rgba(16, 185, 129, 0.2);
+    color: #34d399;
+}
+
+.status-hiatus {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+}
+
+/* Pagination */
+.raz-pagination {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+}
+
+.raz-page-btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    background: var(--raz-bg-card);
+    border: 1px solid var(--raz-border);
+    cursor: pointer;
+}
+
+.raz-page-btn.active {
+    background: var(--raz-primary);
+    border-color: var(--raz-primary);
+    color: white;
+}
+
+/* Forms */
+.raz-form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--raz-bg-card);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid var(--raz-border);
+}
+
+.raz-form-group {
+    margin-bottom: 1.5rem;
+}
+
+.raz-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--raz-text-muted);
+    font-weight: 500;
+}
+
+.raz-input-full {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--raz-border);
+    color: var(--raz-text-main);
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-family: inherit;
+}
+
+.raz-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.raz-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--raz-border);
+}

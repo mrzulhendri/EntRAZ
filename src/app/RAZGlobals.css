@@ -1,0 +1,243 @@
+/*
+ * ============================================================
+ * RAZGlobals.css - Global Styles untuk Public Website
+ * ============================================================
+ */
+
+:root {
+    --raz-bg-main: #0f172a;
+    --raz-bg-card: #1e293b;
+    --raz-text-main: #f8fafc;
+    --raz-text-muted: #94a3b8;
+    --raz-primary: #6366f1;
+    --raz-accent: #ec4899;
+    --raz-radius: 0.75rem;
+}
+
+body {
+    background-color: var(--raz-bg-main);
+    color: var(--raz-text-main);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+    margin: 0;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+/* Navbar */
+.raz-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.raz-nav-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--raz-primary), var(--raz-accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.raz-nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.raz-nav-link {
+    font-weight: 500;
+    color: var(--raz-text-muted);
+    transition: color 0.2s;
+}
+
+.raz-nav-link:hover,
+.raz-nav-link.active {
+    color: var(--raz-text-main);
+}
+
+/* Hero Section */
+.raz-hero {
+    height: 80vh;
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.raz-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    filter: brightness(0.4);
+}
+
+.raz-hero-content {
+    padding: 0 4rem;
+    max-width: 800px;
+    z-index: 10;
+}
+
+.raz-hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.raz-hero-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 1.1rem;
+    color: #e2e8f0;
+}
+
+.raz-hero-desc {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.raz-hero-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.raz-btn-hero {
+    padding: 0.75rem 2rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.raz-btn-play {
+    background: var(--raz-primary);
+    color: white;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.4);
+}
+
+.raz-btn-play:hover {
+    background: #4f46e5;
+    transform: scale(1.05);
+}
+
+.raz-btn-info {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    backdrop-filter: blur(4px);
+}
+
+.raz-btn-info:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Section Components */
+.raz-section {
+    padding: 3rem 2rem;
+}
+
+.raz-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.raz-section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    border-left: 4px solid var(--raz-primary);
+    padding-left: 1rem;
+}
+
+/* Content Grid */
+.raz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 1.5rem;
+}
+
+.raz-card {
+    background: var(--raz-bg-card);
+    border-radius: var(--raz-radius);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    aspect-ratio: 2/3;
+    cursor: pointer;
+}
+
+.raz-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.raz-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.raz-card-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 4rem 1rem 1rem 1rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.95), transparent);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.raz-card-title {
+    font-weight: 600;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.3;
+}
+
+.raz-card-meta {
+    font-size: 0.8rem;
+    color: var(--raz-text-muted);
+}
+
+.raz-rating-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(4px);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #fbbf24;
+}

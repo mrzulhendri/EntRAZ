@@ -1,0 +1,224 @@
+/*
+ * ============================================================
+ * RAZAdminLayout.css - Desain Modern untuk Admin Panel
+ * ============================================================
+ * Menggunakan prinsip Glassmorphism dan warna premium.
+ * Tema gelap sebagai default untuk kesan profesional.
+ * ============================================================
+ */
+
+:root {
+    --raz-primary: #6366f1;
+    /* Indigo 500 */
+    --raz-primary-hover: #4f46e5;
+    /* Indigo 600 */
+    --raz-secondary: #ec4899;
+    /* Pink 500 */
+    --raz-accent: #8b5cf6;
+    /* Violet 500 */
+
+    --raz-bg-dark: #0f172a;
+    /* Slate 900 */
+    --raz-bg-card: rgba(30, 41, 59, 0.7);
+    /* Slate 800 with opacity */
+    --raz-bg-glass: rgba(15, 23, 42, 0.6);
+
+    --raz-text-main: #f8fafc;
+    /* Slate 50 */
+    --raz-text-muted: #94a3b8;
+    /* Slate 400 */
+
+    --raz-border: rgba(148, 163, 184, 0.1);
+    --raz-blur: 12px;
+
+    --raz-sidebar-width: 260px;
+    --raz-header-height: 70px;
+}
+
+/* Reset Dasar */
+body {
+    background-color: var(--raz-bg-dark);
+    color: var(--raz-text-main);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    overflow-x: hidden;
+}
+
+/* Layout Container */
+.raz-admin-layout {
+    display: flex;
+    min-height: 100vh;
+    position: relative;
+    background-image:
+        radial-gradient(circle at 10% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 20%);
+}
+
+/* Sidebar */
+.raz-sidebar {
+    width: var(--raz-sidebar-width);
+    background: var(--raz-bg-card);
+    backdrop-filter: blur(var(--raz-blur));
+    border-right: 1px solid var(--raz-border);
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    z-index: 50;
+    transition: transform 0.3s ease;
+}
+
+.raz-sidebar-header {
+    height: var(--raz-header-height);
+    display: flex;
+    align-items: center;
+    padding: 0 1.5rem;
+    border-bottom: 1px solid var(--raz-border);
+}
+
+.raz-logo {
+    font-size: 1.5rem;
+    font-weight: 800;
+    background: linear-gradient(to right, var(--raz-primary), var(--raz-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+}
+
+.raz-nav {
+    flex: 1;
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+}
+
+.raz-nav-item {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.75rem;
+    color: var(--raz-text-muted);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.raz-nav-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--raz-text-main);
+    transform: translateX(4px);
+}
+
+.raz-nav-item.active {
+    background: linear-gradient(90deg, rgba(99, 102, 241, 0.2) 0%, transparent 100%);
+    color: var(--raz-primary);
+    border-left: 3px solid var(--raz-primary);
+}
+
+.raz-nav-icon {
+    margin-right: 0.75rem;
+    font-size: 1.25rem;
+}
+
+.raz-user-profile {
+    padding: 1.5rem;
+    border-top: 1px solid var(--raz-border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.raz-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--raz-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+/* Main Content Area */
+.raz-main-content {
+    flex: 1;
+    margin-left: var(--raz-sidebar-width);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header / Topbar */
+.raz-topbar {
+    height: var(--raz-header-height);
+    background: var(--raz-bg-glass);
+    backdrop-filter: blur(var(--raz-blur));
+    border-bottom: 1px solid var(--raz-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+}
+
+.raz-page-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.raz-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.raz-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--raz-border);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--raz-text-main);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.raz-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.raz-btn-primary {
+    background: var(--raz-primary);
+    border-color: var(--raz-primary);
+}
+
+.raz-btn-primary:hover {
+    background: var(--raz-primary-hover);
+}
+
+/* Content Body */
+.raz-content-body {
+    padding: 2rem;
+    flex: 1;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .raz-sidebar {
+        transform: translateX(-100%);
+    }
+
+    .raz-sidebar.open {
+        transform: translateX(0);
+    }
+
+    .raz-main-content {
+        margin-left: 0;
+    }
+}

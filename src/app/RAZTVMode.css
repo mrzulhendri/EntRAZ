@@ -1,0 +1,61 @@
+/*
+ * ============================================================
+ * RAZTVMode.css - Android TV & Keyboard Navigation Styles
+ * ============================================================
+ */
+
+/* Hide cursor on TV mode if possible, or style focus ring */
+body.tv-mode {
+    cursor: none;
+}
+
+/* Default focus style for interactive elements */
+:focus {
+    outline: none;
+}
+
+/* TV Focus Class - Applied by JS or :focus-visible */
+.raz-focusable:focus,
+.raz-focusable:focus-visible,
+.raz-focusable.focused {
+    outline: 3px solid var(--raz-primary);
+    outline-offset: 4px;
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+    z-index: 50;
+    position: relative;
+}
+
+/* Specific component overrides for TV focus */
+.raz-card:focus,
+.raz-card.focused {
+    border-color: var(--raz-primary);
+    transform: scale(1.1);
+}
+
+.raz-nav-link:focus,
+.raz-nav-link.focused {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+}
+
+.raz-btn:focus,
+.raz-btn.focused {
+    background: var(--raz-primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+/* Scroll snap for smooth TV grid navigation */
+.raz-grid {
+    scroll-behavior: smooth;
+}
+
+@media (hover: none) and (pointer: coarse) {
+
+    /* Touch/Remote specific adjustments */
+    .raz-card {
+        transition: transform 0.1s;
+    }
+}

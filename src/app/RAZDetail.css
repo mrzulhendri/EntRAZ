@@ -1,0 +1,235 @@
+/*
+ * ============================================================
+ * RAZDetail.css - Styles untuk Halaman Detail Konten
+ * ============================================================
+ */
+
+.raz-detail-header {
+    position: relative;
+    min-height: 60vh;
+    margin-bottom: 2rem;
+}
+
+.raz-detail-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, transparent 100%);
+    opacity: 0.4;
+}
+
+.raz-detail-content {
+    display: flex;
+    gap: 3rem;
+    padding: 8rem 4rem 2rem 4rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+    .raz-detail-content {
+        flex-direction: column;
+        padding: 6rem 1.5rem 2rem 1.5rem;
+        gap: 2rem;
+    }
+}
+
+.raz-poster-wrapper {
+    flex-shrink: 0;
+    width: 300px;
+}
+
+.raz-detail-poster {
+    width: 100%;
+    border-radius: 1rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.raz-detail-info {
+    flex: 1;
+    padding-top: 1rem;
+}
+
+.raz-detail-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    line-height: 1.1;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.raz-detail-alt-title {
+    font-size: 1.1rem;
+    color: var(--raz-text-muted);
+    margin-bottom: 1.5rem;
+    font-style: italic;
+}
+
+.raz-detail-meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2rem;
+    font-size: 1rem;
+}
+
+.raz-meta-tag {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 1rem;
+    border-radius: 2rem;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.raz-rating-star {
+    color: #fbbf24;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.raz-detail-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+}
+
+.raz-btn-action {
+    padding: 0.8rem 2rem;
+    border-radius: 0.75rem;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.2s;
+}
+
+.raz-btn-primary {
+    background: var(--raz-primary);
+    color: white;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.raz-btn-primary:hover {
+    background: #4f46e5;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(99, 102, 241, 0.5);
+}
+
+.raz-btn-secondary {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.raz-btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.raz-detail-desc {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #cbd5e1;
+    margin-bottom: 2rem;
+    max-width: 800px;
+}
+
+.raz-detail-specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1.5rem;
+    border-radius: 1rem;
+    margin-bottom: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.raz-spec-item label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--raz-text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.raz-spec-item span {
+    font-weight: 600;
+}
+
+/* Episode/Chapter List */
+.raz-episode-section {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 4rem 4rem 4rem;
+}
+
+.raz-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.raz-list-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.raz-episode-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+}
+
+.raz-episode-card {
+    background: var(--raz-bg-card);
+    padding: 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.raz-episode-card:hover {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: var(--raz-primary);
+    transform: translateX(4px);
+}
+
+.raz-ep-number {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--raz-text-muted);
+    width: 40px;
+}
+
+.raz-ep-info {
+    flex: 1;
+}
+
+.raz-ep-title {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.raz-ep-date {
+    font-size: 0.8rem;
+    color: var(--raz-text-muted);
+}
