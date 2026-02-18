@@ -3,7 +3,7 @@
  * Setup Database API - GET /api/setup-db
  * ============================================================
  * Terakhir diperbarui: 2026-02-18
- * Versi: 1.1.0
+ * Versi: 1.2.0
  * 
  * Deskripsi:
  * Endpoint untuk inisialisasi tabel di Supabase Postgres.
@@ -15,10 +15,20 @@ import { NextResponse } from 'next/server';
 import { query } from '@/lib/RAZDatabasePostgres';
 import bcrypt from 'bcryptjs';
 
+// PENTING: Paksa gunakan Node.js runtime (bukan Edge)
+// karena library `pg` membutuhkan fitur Node.js native
+export const runtime = 'nodejs';
+
 export async function GET(request) {
-  try {
-    // Inisialisasi Tabel Users
-    await query(`
+    const results = [];
+
+    try {
+        // Test koneksi terlebih dahulu
+        const testResult = await query('SELECT NOW() as current_time');
+        results.push('✅ Koneksi database berhasil: ' + testResult.rows[0].current_time);
+
+        // Inisialisasi Tabel Users
+        await query(`
             CREATE TABLE IF NOT EXISTS users (
                 id SERIAL PRIMARY KEY,
                 username VARCHAR(255) UNIQUE NOT NULL,
@@ -30,9 +40,10 @@ export async function GET(request) {
                 updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        results.push('✅ Tabel users');
 
-    // Inisialisasi Tabel Contents
-    await query(`
+        // Inisialisasi Tabel Contents
+        await query(`
             CREATE TABLE IF NOT EXISTS contents (
                 id SERIAL PRIMARY KEY,
                 title TEXT NOT NULL,
@@ -54,9 +65,10 @@ export async function GET(request) {
                 updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        results.push('✅ Tabel contents');
 
-    // Inisialisasi Tabel Episodes
-    await query(`
+        // Inisialisasi Tabel Episodes
+        await query(`
             CREATE TABLE IF NOT EXISTS episodes (
                 id SERIAL PRIMARY KEY,
                 content_id INTEGER NOT NULL REFERENCES contents(id) ON DELETE CASCADE,
@@ -69,9 +81,10 @@ export async function GET(request) {
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        results.push('✅ Tabel episodes');
 
-    // Inisialisasi Tabel Chapters
-    await query(`
+        // Inisialisasi Tabel Chapters
+        await query(`
             CREATE TABLE IF NOT EXISTS chapters (
                 id SERIAL PRIMARY KEY,
                 content_id INTEGER NOT NULL REFERENCES contents(id) ON DELETE CASCADE,
@@ -81,9 +94,10 @@ export async function GET(request) {
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        results.push('✅ Tabel chapters');
 
-    // Inisialisasi Tabel Novel Chapters
-    await query(`
+        // Inisialisasi Tabel Novel Chapters
+        await query(`
             CREATE TABLE IF NOT EXISTS novel_chapters (
                 id SERIAL PRIMARY KEY,
                 content_id INTEGER NOT NULL REFERENCES contents(id) ON DELETE CASCADE,
@@ -94,9 +108,10 @@ export async function GET(request) {
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        results.push('✅ Tabel novel_chapters');
 
-    // Inisialisasi Tabel Scraper Sources
-    await query(`
+        // Inisialisasi Tabel Scraper Sources
+        await query(`
             CREATE TABLE IF NOT EXISTS scraper_sources (
                 id SERIAL PRIMARY KEY,
                 content_id INTEGER REFERENCES contents(id) ON DELETE SET NULL,
@@ -109,9 +124,10 @@ export async function GET(request) {
                 created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        results.push('✅ Tabel scraper_sources');
 
-    // Inisialisasi Tabel User History
-    await query(`
+        // Inisialisasi Tabel User History
+        await query(`
             CREATE TABLE IF NOT EXISTS user_history (
                 id SERIAL PRIMARY KEY,
                 user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -123,9 +139,10 @@ export async function GET(request) {
                 last_accessed TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
             )
         `);
+        results.push('✅ Tabel user_history');
 
-    // Inisialisasi Tabel Bookmarks
-    await query(`
+        // Inisialisasi Tabel Bookmarks
+        await query(`
             CREATE TABLE IF NOT EXISTS bookmarks (
                 id SERIAL PRIMARY KEY,
                 user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -134,64 +151,74 @@ export async function GET(request) {
                 UNIQUE(user_id, content_id)
             )
         `);
+        results.push('✅ Tabel bookmarks');
 
-    // Inisialisasi Tabel Genres
-    await query(`
+        // Inisialisasi Tabel Genres
+        await query(`
             CREATE TABLE IF NOT EXISTS genres (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(100) UNIQUE NOT NULL,
                 slug VARCHAR(100) UNIQUE NOT NULL
             )
         `);
+        results.push('✅ Tabel genres');
 
-    // Inisialisasi Tabel Content Genres
-    await query(`
+        // Inisialisasi Tabel Content Genres
+        await query(`
             CREATE TABLE IF NOT EXISTS content_genres (
                 content_id INTEGER NOT NULL REFERENCES contents(id) ON DELETE CASCADE,
                 genre_id INTEGER NOT NULL REFERENCES genres(id) ON DELETE CASCADE,
                 PRIMARY KEY (content_id, genre_id)
             )
         `);
+        results.push('✅ Tabel content_genres');
 
-    // Seed Genre Default
-    const defaultGenres = [
-      ['Action', 'action'], ['Adventure', 'adventure'], ['Comedy', 'comedy'],
-      ['Drama', 'drama'], ['Fantasy', 'fantasy'], ['Horror', 'horror'],
-      ['Mystery', 'mystery'], ['Romance', 'romance'], ['Sci-Fi', 'sci-fi'],
-      ['Thriller', 'thriller'], ['Slice of Life', 'slice-of-life'], ['Supernatural', 'supernatural']
-    ];
+        // Seed Genre Default
+        const defaultGenres = [
+            ['Action', 'action'], ['Adventure', 'adventure'], ['Comedy', 'comedy'],
+            ['Drama', 'drama'], ['Fantasy', 'fantasy'], ['Horror', 'horror'],
+            ['Mystery', 'mystery'], ['Romance', 'romance'], ['Sci-Fi', 'sci-fi'],
+            ['Thriller', 'thriller'], ['Slice of Life', 'slice-of-life'], ['Supernatural', 'supernatural']
+        ];
 
-    for (const [name, slug] of defaultGenres) {
-      await query(
-        'INSERT INTO genres (name, slug) VALUES ($1, $2) ON CONFLICT (name) DO NOTHING',
-        [name, slug]
-      );
-    }
+        for (const [name, slug] of defaultGenres) {
+            await query(
+                'INSERT INTO genres (name, slug) VALUES ($1, $2) ON CONFLICT (name) DO NOTHING',
+                [name, slug]
+            );
+        }
+        results.push('✅ Genre default berhasil di-seed');
 
-    // Seed Admin Default
-    const hashedPassword = await bcrypt.hash('admin123', 10);
-    await query(
-      `INSERT INTO users (username, email, password_hash, role) 
+        // Seed Admin Default
+        const hashedPassword = await bcrypt.hash('admin123', 10);
+        await query(
+            `INSERT INTO users (username, email, password_hash, role) 
              VALUES ($1, $2, $3, $4) ON CONFLICT (username) DO NOTHING`,
-      ['admin', 'admin@entraz.local', hashedPassword, 'admin']
-    );
+            ['admin', 'admin@entraz.local', hashedPassword, 'admin']
+        );
+        results.push('✅ Admin default berhasil dibuat (admin/admin123)');
 
-    // Create Indexes
-    await query('CREATE INDEX IF NOT EXISTS idx_contents_type ON contents(type)');
-    await query('CREATE INDEX IF NOT EXISTS idx_contents_featured ON contents(is_featured)');
-    await query('CREATE INDEX IF NOT EXISTS idx_episodes_content ON episodes(content_id)');
-    await query('CREATE INDEX IF NOT EXISTS idx_chapters_content ON chapters(content_id)');
+        // Create Indexes
+        await query('CREATE INDEX IF NOT EXISTS idx_contents_type ON contents(type)');
+        await query('CREATE INDEX IF NOT EXISTS idx_contents_featured ON contents(is_featured)');
+        await query('CREATE INDEX IF NOT EXISTS idx_episodes_content ON episodes(content_id)');
+        await query('CREATE INDEX IF NOT EXISTS idx_chapters_content ON chapters(content_id)');
+        results.push('✅ Indexes berhasil dibuat');
 
-    return NextResponse.json({
-      message: 'Database Supabase Postgres berhasil diinisialisasi! 🎉',
-      tables: ['users', 'contents', 'episodes', 'chapters', 'novel_chapters', 'scraper_sources', 'user_history', 'bookmarks', 'genres', 'content_genres'],
-      admin: { username: 'admin', password: 'admin123' }
-    });
-  } catch (error) {
-    console.error('Setup DB error:', error);
-    return NextResponse.json(
-      { error: 'Gagal inisialisasi database: ' + error.message },
-      { status: 500 }
-    );
-  }
+        return NextResponse.json({
+            success: true,
+            message: 'Database Supabase Postgres berhasil diinisialisasi! 🎉',
+            details: results
+        });
+    } catch (error) {
+        console.error('Setup DB error:', error);
+        return NextResponse.json({
+            success: false,
+            error: error.message,
+            errorCode: error.code || 'UNKNOWN',
+            errorDetail: error.detail || null,
+            completedSteps: results,
+            hint: 'Pastikan POSTGRES_URL_NON_POOLING sudah di-set di Vercel Environment Variables.'
+        }, { status: 500 });
+    }
 }
