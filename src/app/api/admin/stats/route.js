@@ -2,15 +2,15 @@
  * ============================================================
  * Admin Stats API - GET /api/admin/stats
  * ============================================================
- * Terakhir diperbarui: 2026-02-17
- * Versi: 1.0.0
+ * Terakhir diperbarui: 2026-02-18
+ * Versi: 1.1.0
  * 
  * Dashboard statistics untuk admin panel.
  * ============================================================
  */
 
 import { NextResponse } from 'next/server';
-import { getDatabase } from '@/lib/RAZDatabase';
+import { query } from '@/lib/RAZDatabasePostgres';
 import { requireAdmin } from '@/lib/RAZAuth';
 
 export async function GET(request) {
@@ -18,35 +18,41 @@ export async function GET(request) {
         const { user, error } = requireAdmin(request);
         if (error) return NextResponse.json({ error }, { status: 403 });
 
-        const db = getDatabase();
-
         // Total counts
-        const totalContent = db.prepare('SELECT COUNT(*) as count FROM contents').get().count;
-        const totalUsers = db.prepare('SELECT COUNT(*) as count FROM users').get().count;
-        const totalEpisodes = db.prepare('SELECT COUNT(*) as count FROM episodes').get().count;
-        const totalChapters = db.prepare('SELECT COUNT(*) as count FROM chapters').get().count;
+        const contentRes = await query('SELECT COUNT(*) as count FROM contents');
+        const userRes = await query('SELECT COUNT(*) as count FROM users');
+        const episodeRes = await query('SELECT COUNT(*) as count FROM episodes');
+        const chapterRes = await query('SELECT COUNT(*) as count FROM chapters');
+
+        const totalContent = parseInt(contentRes.rows[0].count);
+        const totalUsers = parseInt(userRes.rows[0].count);
+        const totalEpisodes = parseInt(episodeRes.rows[0].count);
+        const totalChapters = parseInt(chapterRes.rows[0].count);
 
         // Content by type
-        const contentTypeStats = db.prepare(`
-      SELECT type, COUNT(*) as count 
-      FROM contents 
-      GROUP BY type
-    `).all();
+        const typeRes = await query(`
+            SELECT type, COUNT(*) as count 
+            FROM contents 
+            GROUP BY type
+        `);
+        const contentTypeStats = typeRes.rows;
 
         // Recent activity (newest content)
-        const recentContent = db.prepare(`
-      SELECT id, title, type, created_at 
-      FROM contents 
-      ORDER BY created_at DESC 
-      LIMIT 5
-    `).all();
+        const recentRes = await query(`
+            SELECT id, title, type, created_at 
+            FROM contents 
+            ORDER BY created_at DESC 
+            LIMIT 5
+        `);
+        const recentContent = recentRes.rows;
 
         // Scraper status
-        const scraperStats = db.prepare(`
-      SELECT status, COUNT(*) as count 
-      FROM scraper_sources 
-      GROUP BY status
-    `).all();
+        const scraperRes = await query(`
+            SELECT status, COUNT(*) as count 
+            FROM scraper_sources 
+            GROUP BY status
+        `);
+        const scraperStats = scraperRes.rows;
 
         return NextResponse.json({
             stats: {

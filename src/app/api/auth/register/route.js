@@ -2,15 +2,15 @@
  * ============================================================
  * Auth Register API - POST /api/auth/register
  * ============================================================
- * Terakhir diperbarui: 2026-02-17
- * Versi: 1.0.0
+ * Terakhir diperbarui: 2026-02-18
+ * Versi: 1.1.0
  * 
  * Endpoint untuk registrasi user baru.
  * ============================================================
  */
 
 import { NextResponse } from 'next/server';
-import { getDatabase } from '@/lib/RAZDatabase';
+import { query } from '@/lib/RAZDatabasePostgres';
 import { generateToken, hashPassword } from '@/lib/RAZAuth';
 
 export async function POST(request) {
@@ -41,14 +41,13 @@ export async function POST(request) {
             );
         }
 
-        const db = getDatabase();
+        // Cek apakah username atau email sudah digunakan di Postgres
+        const existingRes = await query(
+            'SELECT id FROM users WHERE username = $1 OR email = $2',
+            [username, email]
+        );
 
-        // Cek apakah username atau email sudah digunakan
-        const existing = db.prepare(
-            'SELECT id FROM users WHERE username = ? OR email = ?'
-        ).get(username, email);
-
-        if (existing) {
+        if (existingRes.rowCount > 0) {
             return NextResponse.json(
                 { error: 'Username atau email sudah terdaftar' },
                 { status: 409 }
@@ -57,12 +56,13 @@ export async function POST(request) {
 
         // Hash password dan simpan user baru
         const password_hash = hashPassword(password);
-        const result = db.prepare(
-            'INSERT INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)'
-        ).run(username, email, password_hash, 'user');
+        const insertRes = await query(
+            'INSERT INTO users (username, email, password_hash, role) VALUES ($1, $2, $3, $4) RETURNING id',
+            [username, email, password_hash, 'user']
+        );
 
         const newUser = {
-            id: result.lastInsertRowid,
+            id: insertRes.rows[0].id,
             username,
             email,
             role: 'user',

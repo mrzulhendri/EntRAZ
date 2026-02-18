@@ -1,11 +1,11 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import '../RAZReader.css';
+import '@/app/RAZReader.css';
 
-export default function ReadPage({ params }) {
+function ReadContent({ params }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [content, setContent] = useState(null);
@@ -17,7 +17,8 @@ export default function ReadPage({ params }) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const { id } = await params;
+                const resolvedParams = await params;
+                const id = resolvedParams.id;
                 const res = await fetch(`/api/contents/${id}`);
                 if (!res.ok) throw new Error('Failed to load content');
 
@@ -109,5 +110,13 @@ export default function ReadPage({ params }) {
                 </button>
             </nav>
         </div>
+    );
+}
+
+export default function ReadPage({ params }) {
+    return (
+        <Suspense fallback={<div className="text-white text-center pt-20">Loading reader...</div>}>
+            <ReadContent params={params} />
+        </Suspense>
     );
 }

@@ -2,8 +2,8 @@
  * ============================================================
  * Auth Login API - POST /api/auth/login
  * ============================================================
- * Terakhir diperbarui: 2026-02-17
- * Versi: 1.0.0
+ * Terakhir diperbarui: 2026-02-18
+ * Versi: 1.1.0
  * 
  * Endpoint untuk login user. Menerima username/email dan password,
  * mengembalikan JWT token jika berhasil.
@@ -11,7 +11,7 @@
  */
 
 import { NextResponse } from 'next/server';
-import { getDatabase } from '@/lib/RAZDatabase';
+import { query } from '@/lib/RAZDatabasePostgres';
 import { generateToken, comparePassword } from '@/lib/RAZAuth';
 
 export async function POST(request) {
@@ -26,12 +26,13 @@ export async function POST(request) {
             );
         }
 
-        const db = getDatabase();
+        // Cari user berdasarkan username atau email di Postgres
+        const res = await query(
+            'SELECT * FROM users WHERE username = $1 OR email = $2',
+            [username, username]
+        );
 
-        // Cari user berdasarkan username atau email
-        const user = db.prepare(
-            'SELECT * FROM users WHERE username = ? OR email = ?'
-        ).get(username, username);
+        const user = res.rows[0];
 
         if (!user) {
             return NextResponse.json(

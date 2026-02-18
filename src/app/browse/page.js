@@ -1,11 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import '../RAZGlobals.css';
+import '@/app/RAZGlobals.css';
+
 
 export default function Browse() {
+    return (
+        <Suspense fallback={<div className="min-h-screen bg-[#0f172a] text-center pt-20">Loading search...</div>}>
+            <BrowseContent />
+        </Suspense>
+    );
+}
+
+function BrowseContent() {
     const searchParams = useSearchParams();
     const initialType = searchParams.get('type') || '';
 

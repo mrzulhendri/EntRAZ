@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import '../RAZDetail.css';
+import '@/app/RAZDetail.css';
 
 export default function DetailPage({ params }) {
     const [content, setContent] = useState(null);

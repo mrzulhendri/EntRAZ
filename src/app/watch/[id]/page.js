@@ -1,11 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import '../RAZPlayer.css';
+import '@/app/RAZPlayer.css';
+
 
 export default function WatchPage({ params }) {
+    return (
+        <Suspense fallback={<div className="text-white text-center pt-20">Loading player...</div>}>
+            <WatchContent params={params} />
+        </Suspense>
+    );
+}
+
+function WatchContent({ params }) {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [content, setContent] = useState(null);
@@ -17,7 +26,8 @@ export default function WatchPage({ params }) {
     useEffect(() => {
         async function fetchData() {
             try {
-                const { id } = await params;
+                const resolvedParams = await params;
+                const id = resolvedParams.id;
                 const res = await fetch(`/api/contents/${id}`);
                 if (!res.ok) throw new Error('Failed to load content');
 

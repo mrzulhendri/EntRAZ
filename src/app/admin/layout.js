@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import './RAZAdminLayout.css';
+import '@/app/admin/RAZAdminLayout.css';
 
 export default function AdminLayout({ children }) {
     const pathname = usePathname();

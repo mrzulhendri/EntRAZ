@@ -1,21 +1,34 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import './RAZAdminDashboard.css';
+import { useRouter } from 'next/navigation';
+import '@/app/admin/RAZAdminDashboard.css';
 
 export default function AdminDashboard() {
+    const router = useRouter();
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         async function fetchStats() {
+            const token = localStorage.getItem('entraz_token');
+            if (!token) {
+                router.push('/user/login');
+                return;
+            }
+
             try {
-                const res = await fetch('/api/admin/stats');
+                const res = await fetch('/api/admin/stats', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
                 if (res.ok) {
                     const data = await res.json();
                     setStats(data);
                 } else {
-                    // Fallback/Error state
+                    if (res.status === 401 || res.status === 403) {
+                        router.push('/user/login');
+                    }
                     console.error('Failed to fetch stats');
                 }
             } catch (err) {

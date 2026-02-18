@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import './../../RAZAdminContent.css';
+import '@/app/admin/RAZAdminContent.css';
 
 export default function NewContent() {
     const router = useRouter();

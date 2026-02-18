@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import './../RAZAdminContent.css';
+import '@/app/admin/RAZAdminContent.css';
 
 export default function ContentList() {
     const [contents, setContents] = useState([]);

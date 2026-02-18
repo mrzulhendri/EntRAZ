@@ -1,7 +1,7 @@
-import './globals.css';
-import './RAZGlobals.css';
-import './RAZTVMode.css';
-import TVNavigation from './components/TVNavigation';
+import '@/app/globals.css';
+import '@/app/RAZGlobals.css';
+import '@/app/RAZTVMode.css';
+import TVNavigation from '@/app/components/TVNavigation';
 
 export const metadata = {
   title: 'EntRAZ - Entertainment Universe',

@@ -1,10 +1,11 @@
 'use client';
+// DEBUG_TAG_RAZ_2026_FIX_001
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import './../../RAZAdminContent.css';
+import '@/app/admin/RAZAdminContent.css';
 
-import RAZModal from '../../components/RAZModal';
+import RAZModal from '@/app/components/RAZModal';
 
 export default function EditContent({ params }) {
     const router = useRouter();
@@ -60,10 +61,19 @@ export default function EditContent({ params }) {
     async function handleSaveDetails(e) {
         e.preventDefault();
         setSaving(true);
+        const token = localStorage.getItem('entraz_token');
+        if (!token) {
+            router.push('/user/login');
+            return;
+        }
+
         try {
             const res = await fetch(`/api/contents/${content.id}`, {
                 method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify(content)
             });
 
@@ -81,8 +91,16 @@ export default function EditContent({ params }) {
 
     function handleDeleteClick() {
         showModal('Delete Content?', 'Are you sure you want to delete this content? This action cannot be undone.', 'danger', async () => {
+            const token = localStorage.getItem('entraz_token');
+            if (!token) {
+                router.push('/user/login');
+                return;
+            }
             try {
-                const res = await fetch(`/api/contents/${content.id}`, { method: 'DELETE' });
+                const res = await fetch(`/api/contents/${content.id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
                 if (res.ok) {
                     router.push('/admin/contents');
                 }

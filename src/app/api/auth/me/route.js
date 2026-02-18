@@ -2,15 +2,15 @@
  * ============================================================
  * Auth Me API - GET /api/auth/me
  * ============================================================
- * Terakhir diperbarui: 2026-02-17
- * Versi: 1.0.0
+ * Terakhir diperbarui: 2026-02-18
+ * Versi: 1.1.0
  * 
  * Endpoint untuk mendapatkan data user yang sedang login.
  * ============================================================
  */
 
 import { NextResponse } from 'next/server';
-import { getDatabase } from '@/lib/RAZDatabase';
+import { query } from '@/lib/RAZDatabasePostgres';
 import { authenticateRequest } from '@/lib/RAZAuth';
 
 export async function GET(request) {
@@ -20,10 +20,12 @@ export async function GET(request) {
             return NextResponse.json({ error }, { status: 401 });
         }
 
-        const db = getDatabase();
-        const userData = db.prepare(
-            'SELECT id, username, email, role, avatar, created_at FROM users WHERE id = ?'
-        ).get(user.id);
+        const res = await query(
+            'SELECT id, username, email, role, avatar, created_at FROM users WHERE id = $1',
+            [user.id]
+        );
+
+        const userData = res.rows[0];
 
         if (!userData) {
             return NextResponse.json({ error: 'User tidak ditemukan' }, { status: 404 });
