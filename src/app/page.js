@@ -12,11 +12,12 @@ export default function Home() {
     async function fetchData() {
       try {
         const res = await fetch('/api/contents?limit=10&sort=newest');
+        if (!res.ok) throw new Error('Failed to fetch data');
         const data = await res.json();
-        setLatest(data.contents);
+        setLatest(data.contents || []);
 
         // Mock featured for now until we have real featured content logic
-        if (data.contents.length > 0) {
+        if (data.contents && data.contents.length > 0) {
           setFeatured([data.contents[0]]);
         }
       } catch (err) {

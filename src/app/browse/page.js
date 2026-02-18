@@ -37,7 +37,9 @@ function BrowseContent() {
             const res = await fetch(`/api/contents?${query.toString()}&limit=24`);
             if (res.ok) {
                 const data = await res.json();
-                setContents(data.contents);
+                setContents(data.contents || []);
+            } else {
+                setContents([]);
             }
         } catch (err) {
             console.error(err);
