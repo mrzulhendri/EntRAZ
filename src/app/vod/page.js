@@ -3,6 +3,7 @@
 import { useState } from "react";
 import ContentCard from "@/components/ContentCard";
 import { Search, Filter, SlidersHorizontal, ChevronRight, Play } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function CinemaPage() {
     const [activeCategory, setActiveCategory] = useState("All");

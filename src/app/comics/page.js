@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, List, Maximize2, ZoomIn, ZoomOut, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -119,4 +119,3 @@ export default function ComicReader() {
     );
 }
 
-import { AnimatePresence } from "framer-motion";

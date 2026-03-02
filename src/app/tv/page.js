@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import VideoPlayer from "@/components/Navigation"; // Wait, I need VideoPlayer
 import { Search, Tv, Globe, Star, Wifi } from "lucide-react";
 import DynamicVideoPlayer from "@/components/VideoPlayer";
+import { cn } from "@/lib/utils";
 
 export default function TVPage() {
     const [selectedChannel, setSelectedChannel] = useState({
