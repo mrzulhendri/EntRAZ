@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ['undici', 'cheerio'],
+  experimental: {
+    serverComponentsExternalPackages: ['undici', 'cheerio'],
+  },
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
