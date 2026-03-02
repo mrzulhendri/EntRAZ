@@ -1,33 +1,14 @@
 # Panduan Deployment EntRAZ ke Vercel
 
-## ⚠️ PERHATIAN PENTING: Database SQLite
-Project ini saat ini menggunakan **SQLite** (`better-sqlite3`) yang menyimpan data dalam file lokal (`data/entraz.db`).
-**Vercel adalah platform Serverless**, artinya file sistem tidak persisten. Jika Anda deploy kode ini *apa adanya* ke Vercel:
-1. Website akan berjalan.
-2. Namum, data (User, Content, History) **akan hilang** setiap kali server restart (cold start) atau redeploy.
-3. `better-sqlite3` mungkin gagal di-build karena ketergantungan native module.
-
-### Solusi yang Disarankan
-Untuk deploy ke Vercel, Anda **HARUS** migrasi database dari SQLite ke service database cloud seperti:
-1. **Vercel Postgres** (Paling mudah integrasinya)
-2. **Neon** / **Supabase** / **Turso**
-3. **CockroachDB**
+## 🚀 Status Migrasi: Selesai
+Project ini telah dimigrasikan dari SQLite (`better-sqlite3`) ke **Vercel Postgres** (`@vercel/postgres`). Kode saat ini sudah menggunakan query asinkron dan siap di-deploy ke Vercel.
 
 ---
 
-## Opsi 1: Deploy ke VPS (Jika ingin tetap pakai SQLite)
-Jika Anda tidak ingin mengubah kode database dan tetap ingin pakai SQLite, disarankan deploy ke **VPS** (seperti DigitalOcean, Linode) atau **Railway** (dengan Volume storage).
-- **Railway**: Bisa deploy repo GitHub langsung. Perlu setting "Volume" agar database tidak hilang.
-- **Coolify / VPS**: Bisa self-host via Docker.
-
----
-
-## Opsi 2: Deploy ke Vercel (Migrasi ke Vercel Postgres)
-
-Berikut adalah panduan lengkap jika Anda memilih migrasi ke Vercel:
+## Langkah-langkah Deployment ke Vercel
 
 ### Langkah 1: Persiapan Repository
-Pastikan kode sudah di-push ke GitHub (sudah dilakukan di langkah sebelumnya).
+Pastikan semua perubahan terbaru sudah di-push ke GitHub.
 
 ### Langkah 2: Buat Project di Vercel
 1. Login ke [Vercel Dashboard](https://vercel.com).
@@ -36,41 +17,34 @@ Pastikan kode sudah di-push ke GitHub (sudah dilakukan di langkah sebelumnya).
 4. Di bagian **"Framework Preset"**, pilih **Next.js**.
 
 ### Langkah 3: Setup Database (Vercel Postgres)
-1. Di halaman konfigurasi project Vercel, buka tab **Storage** (atau buat project dulu lalu ke Storage).
+1. Di halaman konfigurasi project Vercel, buka tab **Storage**.
 2. Klik **"Create Database"** -> Pilih **Postgres**.
 3. Ikuti langkah pembuatan (Region: pilih yang terdekat, misal Singapore `sin1`).
-4. Setelah dibuat, Vercel otomatis menambahkan Environment Variables (`POSTGRES_URL`, dll) ke project Anda.
+4. Setelah dibuat, klik **"Connect"** agar Vercel otomatis menambahkan Environment Variables (`POSTGRES_URL`, dll) ke project Anda.
 
-### Langkah 4: Update Kode Database (`src/lib/RAZDatabase.js`)
-Anda perlu mengubah driver database dari `better-sqlite3` menjadi `@vercel/postgres`.
-*(Jika Anda setuju, saya bisa bantu buatkan file `RAZDatabasePostgres.js` untuk migrasi ini).*
+### Langkah 4: Environment Variables (Manual)
+Di menu **Settings** -> **Environment Variables** di Vercel, pastikan variabel berikut ada:
+- `JWT_SECRET`: Isi dengan string acak yang panjang (contoh: `RAZ_SECRET_KEY_2026`).
+- (Opsional) `NODE_ENV`: `production`.
 
-Contoh perubahan kode:
-```javascript
-// SEBELUM (SQLite)
-const db = require('better-sqlite3')('data/entraz.db');
+### Langkah 5: Inisialisasi Database (Setup Tables)
+Setelah berhasil deploy (status: *Success*), Anda **WAJIB** membuat tabel di database Postgres.
+1. Buka browser dan akses: `https://your-project.vercel.app/api/setup-db`
+2. Jika berhasil, akan muncul pesan: `"Database Postgres berhasil diinisialisasi"`.
+3. Script ini juga membuat **Akun Admin Default**:
+   - Username: `admin`
+   - Password: `admin123`
 
-// SESUDAH (Postgres)
-import { sql } from '@vercel/postgres';
-// Query juga harus disesuaikan dari synchronous menjadi asynchronous (await)
-```
-
-### Langkah 5: Environment Variables
-Di menu **Settings** -> **Environment Variables** di Vercel, tambahkan:
-- `JWT_SECRET`: Isi dengan string acak yang panjang dan aman (contoh: `rahasia_super_aman_123`).
-
-### Langkah 6: Deploy
-1. Klik **"Deploy"**.
-2. Tunggu proses build selesai.
-3. Jika ada error terkait `better-sqlite3`, Anda mungkin perlu menghapus dependency tersebut dari `package.json` jika sudah pindah ke Postgres.
-
-### Langkah 7: Inisialisasi Tabel
-Setelah deploy, Anda perlu menjalankan script untuk membuat tabel di Postgres. Bisa dibuatkan route khusus `/api/setup-db` yang dijalankan sekali via browser.
+### Langkah 6: Verifikasi
+Akses dashboard admin dan coba login dengan akun default. Jika berhasil masuk, migrasi telah sukses 100%.
 
 ---
 
-## Ringkasan
-- **Project saat ini**: Siap jalan di Local / VPS.
-- **Untuk Vercel**: Perlu migrasi database ke Postgres.
+## Catatan Teknis
+- **Driver**: `@vercel/postgres`
+- **Logic**: Semua query database sekarang bersifat asinkron (`await query(...)`).
+- **Wrapper**: Terletak di `src/lib/RAZDatabasePostgres.js`.
+- **Seeding**: Data genre default otomatis dimasukkan saat menjalankan `/api/setup-db`.
 
-**Rekomendasi**: Jika ini hanya untuk demo portofolio, deploy ke **Railway** atau **Render** mungkin lebih cepat karena support Docker/SQLite (dengan caveat storage). Tapi untuk production scale, **Vercel + Postgres** adalah pilihan terbaik.
+> [!IMPORTANT]
+> Jangan lupa untuk login ke dashboard admin dan **Ganti Password Admin** segera setelah inisialisasi.

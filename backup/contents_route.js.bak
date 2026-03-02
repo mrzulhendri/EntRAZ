@@ -85,22 +85,19 @@ export async function GET(request) {
         // Hitung total data
         const countQuery = `SELECT COUNT(DISTINCT c.id) as total FROM contents c ${joinClause} WHERE ${whereClause}`;
         const countRes = await query(countQuery, params);
-        const total = parseInt(countRes.rows[0]?.total || 0);
+        const total = parseInt(countRes.rows[0].total);
 
         // Ambil data dengan pagination
-        // Fix: In Postgres, when using DISTINCT, the expressions in ORDER BY must appear in SELECT list.
-        // We wrap the query to allow ordering by any column.
+        // Menggunakan STRING_AGG untuk Postgres (pengganti GROUP_CONCAT)
         const dataQuery = `
-            SELECT * FROM (
-                SELECT DISTINCT ON (c.id) c.*, 
-                    (SELECT STRING_AGG(g2.name, ', ') FROM content_genres cg2 
-                     INNER JOIN genres g2 ON cg2.genre_id = g2.id 
-                     WHERE cg2.content_id = c.id) as genre_names
-                FROM contents c 
-                ${joinClause}
-                WHERE ${whereClause}
-            ) sub
-            ORDER BY ${orderClause.replace('c.', 'sub.')}
+            SELECT DISTINCT c.*, 
+                (SELECT STRING_AGG(g2.name, ', ') FROM content_genres cg2 
+                 INNER JOIN genres g2 ON cg2.genre_id = g2.id 
+                 WHERE cg2.content_id = c.id) as genre_names
+            FROM contents c 
+            ${joinClause}
+            WHERE ${whereClause}
+            ORDER BY ${orderClause}
             LIMIT $${pIndex++} OFFSET $${pIndex++}
         `;
 
@@ -118,12 +115,7 @@ export async function GET(request) {
         });
     } catch (error) {
         console.error('Get contents error:', error);
-        // Memberikan detail error di response untuk mempermudah debugging
-        return NextResponse.json({
-            error: 'Terjadi kesalahan server',
-            message: error.message,
-            code: error.code
-        }, { status: 500 });
+        return NextResponse.json({ error: 'Terjadi kesalahan server' }, { status: 500 });
     }
 }
 

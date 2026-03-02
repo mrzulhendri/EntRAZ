@@ -1,0 +1,13 @@
+# RAZ Update History - 2026-02-18
+
+## Versi 1.1.0 (In Progress)
+**Kegiatan Hari Ini:**
+1.  **Inisialisasi Migrasi Database ke Vercel Postgres**
+    - Menganalisis kebutuhan migrasi dari SQLite ke Postgres.
+    - Menyiapkan rencana implementasi untuk perubahan sinkron ke asinkron pada API routes.
+    - Membuat backup `RAZDatabase.js` ke folder `backup/`.
+    - Menyiapkan boilerplate untuk `RAZDatabasePostgres.js`.
+
+**Detail Perubahan:**
+- [Planning] Pemetaan semua endpoint API yang menggunakan `better-sqlite3`.
+- [Documentation] Pembuatan `implementation_plan.md` dan pembaruan `task.md`.
