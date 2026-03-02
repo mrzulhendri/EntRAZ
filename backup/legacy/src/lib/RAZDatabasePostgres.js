@@ -1,21 +1,22 @@
 /**
  * ============================================================
- * RAZDatabasePostgres.js - Database Engine untuk Supabase Postgres
+ * RAZDatabasePostgres.js - Database Engine untuk Supabase
  * ============================================================
- * Terakhir diperbarui: 2026-02-18
- * Versi: 1.2.0
+ * Terakhir diperbarui: 2026-03-02
+ * Versi: 2.0.0
  * 
  * Deskripsi:
- * File ini mengatur koneksi ke Supabase Postgres menggunakan
- * library `pg` (node-postgres). Cocok untuk lingkungan serverless
- * seperti Vercel maupun VPS tradisional.
+ * Mengatur koneksi ke Supabase Postgres menggunakan:
+ * 1. pg (node-postgres) untuk raw SQL queries (lebih fleksibel).
+ * 2. @supabase/supabase-js untuk fitur storage, auth, dan real-time.
  * 
- * PENTING: Gunakan POSTGRES_URL_NON_POOLING untuk menghindari
- * masalah kompatibilitas PgBouncer dengan prepared statements.
+ * PENTING: Gunakan connection string dari Supabase (Transaction Pooler).
  * ============================================================
  */
 
 import pg from 'pg';
+import { createClient } from '@supabase/supabase-js';
+
 const { Pool } = pg;
 
 // Buat connection pool (singleton)
@@ -74,7 +75,6 @@ export async function query(text, params = []) {
         const res = await p.query(text, params);
         const duration = Date.now() - start;
 
-        // Log query hanya di development untuk debugging
         if (process.env.NODE_ENV === 'development') {
             console.log('Executed query', { text: text.substring(0, 80), duration, rows: res.rowCount });
         }
@@ -87,10 +87,24 @@ export async function query(text, params = []) {
 }
 
 /**
- * getDatabase - Mengembalikan instance Pool
+ * supabase - Instance Supabase Client (singleton)
  */
-export function getDatabase() {
-    return getPool();
+let supabaseInstance = null;
+
+export function getSupabase() {
+    if (!supabaseInstance) {
+        const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const supabaseKey = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+        if (supabaseUrl && supabaseKey) {
+            supabaseInstance = createClient(supabaseUrl, supabaseKey);
+        } else {
+            console.warn('Supabase URL atau Key tidak ditemukan. Fitur Supabase Client akan dinonaktifkan.');
+        }
+    }
+    return supabaseInstance;
 }
 
-export default { query, getDatabase };
+export const supabase = getSupabase();
+
+export default { query, getDatabase, getSupabase, supabase };

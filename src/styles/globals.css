@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --foreground-rgb: 248, 250, 252;
+    --background-start-rgb: 15, 23, 42;
+    --background-end-rgb: 0, 0, 0;
+
+    --raz-primary: 99, 102, 241;
+    --raz-secondary: 236, 72, 153;
+    --raz-accent: 139, 92, 246;
+    --raz-bg: 15, 23, 42;
+}
+
+[data-theme='light'] {
+    --foreground-rgb: 15, 23, 42;
+    --background-start-rgb: 248, 250, 252;
+    --background-end-rgb: 255, 255, 255;
+    --raz-bg: 248, 250, 252;
+}
+
+body {
+    color: rgb(var(--foreground-rgb));
+    background: linear-gradient(to bottom,
+            transparent,
+            rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+    min-height: 100vh;
+    font-family: 'Inter', sans-serif;
+}
+
+@layer components {
+    .raz-glass {
+        @apply bg-white/5 backdrop-blur-[12px] border border-white/10 rounded-2xl;
+    }
+
+    .raz-button-primary {
+        @apply bg-gradient-raz text-white font-semibold px-6 py-2.5 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg shadow-indigo-500/20 active:shadow-none;
+    }
+
+    .tv-focus:focus {
+        @apply outline-none ring-4 ring-raz-primary ring-offset-4 ring-offset-raz-bg scale-105 z-10 bg-white/10;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.3);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.5);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+/* Animations */
+.animate-spin-slow {
+    animation: spin 8s linear infinite;
+}
+
+.animate-marquee {
+    animation: marquee 15s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes marquee {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}

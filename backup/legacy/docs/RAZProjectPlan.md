@@ -12,7 +12,8 @@
 
 ## Fase 3: Deployment & Optimasi (In Progress)
 - [x] Migrasi Database ke Vercel Postgres
-- [ ] Deployment ke Vercel
+- [/] Migrasi Database ke Supabase
+- [ ] Deployment ke Vercel / Netlify
 - [ ] Optimasi Performa & Cache
 - [ ] Integrasi Analytics
 

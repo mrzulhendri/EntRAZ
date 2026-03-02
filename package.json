@@ -1,27 +1,38 @@
 {
-  "name": "entraz-temp",
-  "version": "0.1.0",
+  "name": "entraz-premium",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint"
   },
   "dependencies": {
-    "@vercel/postgres": "^0.10.0",
-    "axios": "^1.13.5",
-    "bcryptjs": "^3.0.3",
-    "better-sqlite3": "^12.6.2",
-    "cheerio": "^1.2.0",
-    "jsonwebtoken": "^9.0.3",
-    "next": "16.1.6",
-    "pg": "^8.18.0",
-    "react": "19.2.3",
-    "react-dom": "19.2.3"
+    "@supabase/supabase-js": "^2.39.7",
+    "axios": "^1.6.7",
+    "bcryptjs": "^2.4.3",
+    "cheerio": "^1.0.0-rc.12",
+    "clsx": "^2.1.0",
+    "framer-motion": "^11.0.8",
+    "hls.js": "^1.5.7",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.344.0",
+    "next": "14.1.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-player": "^2.14.1",
+    "tailwind-merge": "^2.2.1"
   },
   "devDependencies": {
-    "eslint": "^9",
-    "eslint-config-next": "16.1.6"
+    "@types/node": "^20.11.24",
+    "@types/react": "^18.2.61",
+    "@types/react-dom": "^18.2.19",
+    "autoprefixer": "^10.4.18",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "14.1.0",
+    "postcss": "^8.4.35",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5.3.3"
   }
 }

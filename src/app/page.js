@@ -1,106 +1,78 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
+import { motion } from "framer-motion";
+import { Tv, Play, BookOpen, Music, Users, Shield, Zap } from "lucide-react";
 
-export default function Home() {
-  const [featured, setFeatured] = useState([]);
-  const [latest, setLatest] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function HomePage() {
+    const features = [
+        { icon: <Tv size={32} />, title: "Live TV", desc: "M3U & Stream" },
+        { icon: <Play size={32} />, title: "Cinema", desc: "Global Movies" },
+        { icon: <BookOpen size={32} />, title: "Library", desc: "Comic & Manga" },
+        { icon: <Music size={32} />, title: "Audio", desc: "Premium Sound" },
+    ];
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch('/api/contents?limit=10&sort=newest');
-        if (!res.ok) throw new Error('Failed to fetch data');
-        const data = await res.json();
-        setLatest(data.contents || []);
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen px-4 py-20 text-center">
+            {/* Hero Section */}
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                className="max-w-4xl mx-auto"
+            >
+                <h1 className="mb-6 text-6xl font-black tracking-tighter md:text-8xl bg-gradient-raz bg-clip-text text-transparent">
+                    ENTRAZ
+                </h1>
+                <p className="mb-10 text-xl font-medium md:text-2xl text-raz-muted max-w-2xl mx-auto">
+                    One platform. All entertainment.
+                    <span className="text-raz-text block mt-2 opacity-80">
+                        No ads. No clutter. Just pure experience.
+                    </span>
+                </p>
 
-        // Mock featured for now until we have real featured content logic
-        if (data.contents && data.contents.length > 0) {
-          setFeatured([data.contents[0]]);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
-
-  return (
-    <main>
-      {/* Navbar Implementation */}
-      <nav className="raz-navbar">
-        <div className="raz-nav-logo">EntRAZ</div>
-        <div className="raz-nav-links">
-          <Link href="/" className="raz-nav-link active">Home</Link>
-          <Link href="/browse?type=movie" className="raz-nav-link">Movies</Link>
-          <Link href="/browse?type=anime" className="raz-nav-link">Anime</Link>
-          <Link href="/browse?type=comic" className="raz-nav-link">Comics</Link>
-          <Link href="/browse?type=novel" className="raz-nav-link">Novels</Link>
-        </div>
-        <div className="raz-nav-actions">
-          <Link href="/admin" className="raz-nav-link">Admin</Link> {/* Temp link for access */}
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="raz-hero">
-        <img src="https://image.tmdb.org/t/p/original/baP5M8KzJjF6z96Zg6hE1y6K4.jpg" alt="Hero Background" className="raz-hero-bg" />
-
-        <div className="raz-hero-content">
-          <h1 className="raz-hero-title">Solo Leveling</h1>
-          <div className="raz-hero-meta">
-            <span>2024</span>
-            <span>•</span>
-            <span>Anime, Action, Fantasy</span>
-            <span>•</span>
-            <span>⭐ 9.8</span>
-          </div>
-          <p className="raz-hero-desc">
-            In a world where hunters, humans who possess magical abilities, must battle deadly monsters to protect the human race from certain annihilation, a notoriously weak hunter named Sung Jinwoo finds himself in a seemingly endless struggle for survival.
-          </p>
-          <div className="raz-hero-actions">
-            <button className="raz-btn-hero raz-btn-play">▶ Play Now</button>
-            <button className="raz-btn-hero raz-btn-info">ℹ More Info</button>
-          </div>
-        </div>
-      </section>
-
-      {/* Latest Updates Section */}
-      <section className="raz-section">
-        <div className="raz-section-header">
-          <h2 className="raz-section-title">Latest Updates</h2>
-          <Link href="/browse" className="raz-nav-link">View All</Link>
-        </div>
-
-        <div className="raz-grid">
-          {loading ? (
-            <p>Loading content...</p>
-          ) : latest.length === 0 ? (
-            <p>No content available yet.</p>
-          ) : (
-            latest.map(item => (
-              <Link href={`/detail/${item.id}`} key={item.id} className="raz-card">
-                <div className="raz-rating-badge">{item.rating || 'N/A'}</div>
-                <img
-                  src={item.cover_image || 'https://via.placeholder.com/200x300'}
-                  alt={item.title}
-                  className="raz-card-img"
-                />
-                <div className="raz-card-overlay">
-                  <div className="raz-card-title">{item.title}</div>
-                  <div className="raz-card-meta">
-                    {item.type} • {item.status}
-                  </div>
+                <div className="flex flex-wrap items-center justify-center gap-4">
+                    <button className="raz-button-primary text-lg px-10 py-4 flex items-center gap-2">
+                        Get Started <Zap size={20} />
+                    </button>
+                    <button className="px-10 py-4 text-lg font-semibold border border-white/10 rounded-xl hover:bg-white/5 transition-colors">
+                        Learn More
+                    </button>
                 </div>
-              </Link>
-            ))
-          )}
+            </motion.div>
+
+            {/* Feature Grid */}
+            <motion.div
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 1 }}
+                className="grid grid-cols-2 gap-4 mt-24 md:grid-cols-4 max-w-6xl mx-auto"
+            >
+                {features.map((f, i) => (
+                    <div
+                        key={i}
+                        className="raz-glass p-8 flex flex-col items-center group hover:bg-white/10 transition-all duration-500 cursor-pointer"
+                    >
+                        <div className="mb-4 text-raz-primary group-hover:scale-110 transition-transform duration-300">
+                            {f.icon}
+                        </div>
+                        <h3 className="text-lg font-bold mb-1">{f.title}</h3>
+                        <p className="text-sm text-raz-muted">{f.desc}</p>
+                    </div>
+                ))}
+            </motion.div>
+
+            {/* Quality Badges */}
+            <div className="flex flex-wrap items-center justify-center gap-8 mt-32 text-raz-muted opacity-50">
+                <div className="flex items-center gap-2">
+                    <Shield size={20} /> Ad-Free System
+                </div>
+                <div className="flex items-center gap-2">
+                    <Users size={20} /> Multi-User Ready
+                </div>
+                <div className="flex items-center gap-2">
+                    <Zap size={20} /> Next-Gen Speed
+                </div>
+            </div>
         </div>
-      </section>
-    </main>
-  );
+    );
 }

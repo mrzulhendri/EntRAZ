@@ -24,3 +24,9 @@
 - `RAZDatabase.js` - [LOCAL] SQLite connection & schema (Sinkron)
 - `RAZAuth.js` - JWT auth utilities
 - `RAZScraper.js` - Cheerio web scraper engine
+- `docs/`
+  - `RAZUpdateHistory_2026-03-02.md` [NEW]
+  - `RAZSupabaseGuide.md` [NEW]
+  - `RAZProjectPlan.md`
+  - `RAZProjectStructure.md`
+  - `RAZVercelGuide.md`
